@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SingleTodo from '../components/SingleTodo';
@@ -6,40 +6,16 @@ import SingleTodo from '../components/SingleTodo';
 import TodoService from '../services/TodoService';
 import { AddTodoResType, GetTodoResType, TodoType } from '../types';
 
+type FilterByType = 'all' | 'doing' | 'completed';
+
 const Todo = () => {
     const navigate = useNavigate();
     const [todo, setTodo] = useState('');
     const [todos, setTodos] = useState([] as TodoType[]);
     const [filteredTodos, setFilteredTodos] = useState([] as TodoType[]);
+    const [filterBy, setFilterBy] = useState('all' as FilterByType);
     const [isFilting, setIsFilting] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
-    // useEffect(() => {
-    //     let expiredIn = 1000 * 9; //30s
-
-    //     const interval = setInterval(async () => {
-    //         try {
-    //             const res = await axios({
-    //                 url: import.meta.env.VITE_REFRESH_TOKEN,
-    //                 method: 'post',
-    //                 data: {
-    //                     refreshToken: localStorage.getItem('refresh-token'),
-    //                 },
-    //             });
-
-    //             const { data } = res.data;
-
-    //             const token = data.token;
-
-    //             localStorage.setItem('token', token);
-    //         } catch (error) {
-    //             localStorage.clear();
-    //             navigate('/sign-in');
-    //         }
-    //     }, expiredIn);
-
-    //     return () => clearInterval(interval);
-    // }, []);
 
     useEffect(() => {
         async function fetchAllTodo() {
@@ -50,7 +26,7 @@ const Todo = () => {
                 const { success, data } = res.data as GetTodoResType;
 
                 if (success) {
-                    setTodos(data.todos);
+                    setTodos(data.todos.reverse());
                     setIsLoading(false);
                 }
             } catch (error) {
@@ -137,7 +113,7 @@ const Todo = () => {
 
     // filter
 
-    function handleFilterTodos(filterBy: 'all' | 'doing' | 'completed') {
+    function handleFilterTodos() {
         if (filterBy === 'all') {
             setIsFilting(false);
         }
@@ -160,6 +136,12 @@ const Todo = () => {
             );
         }
     }
+
+    //
+
+    useEffect(() => {
+        handleFilterTodos();
+    }, [filterBy, todos]);
 
     return (
         <div
@@ -205,7 +187,7 @@ const Todo = () => {
                         id='all'
                         role='button'
                         defaultChecked
-                        onClick={() => handleFilterTodos('all')}
+                        onClick={() => setFilterBy('all')}
                     />
                     <label className='form-check-label' htmlFor='all'>
                         All
@@ -218,7 +200,7 @@ const Todo = () => {
                         name='sortBy'
                         id='doing'
                         role='button'
-                        onClick={() => handleFilterTodos('doing')}
+                        onClick={() => setFilterBy('doing')}
                     />
                     <label className='form-check-label' htmlFor='doing'>
                         Doing
@@ -231,7 +213,7 @@ const Todo = () => {
                         name='sortBy'
                         id='completed'
                         role='button'
-                        onClick={() => handleFilterTodos('completed')}
+                        onClick={() => setFilterBy('completed')}
                     />
                     <label className='form-check-label' htmlFor='completed'>
                         Completed
