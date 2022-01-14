@@ -1,7 +1,7 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
 import jwtDecode from 'jwt-decode';
-import { RefreshTokenResType } from '../types';
+import { AuthErrorType, RefreshTokenResType } from '../types';
 import AuthService from './AuthService';
 
 const axiosInstance = axios.create({
@@ -51,8 +51,15 @@ axios.interceptors.response.use(
         return response;
     },
     function (error) {
-        localStorage.clear();
-        window.location.replace('/sign-in');
+        const res = error as AuthErrorType;
+
+        const serverErrorType = ['token', 'refreshToken', 'server'];
+
+        if (serverErrorType.includes(res.response.data.type)) {
+            localStorage.clear();
+            window.location.replace('/sign-in');
+        }
+
         return Promise.reject(error);
     },
 );
