@@ -9,7 +9,7 @@ import ButtonSubmit from '../components/ButtonSubmit';
 import { validateEmailFormat } from '../utils/validateEmailFormat';
 import axios, { AxiosError } from 'axios';
 import { AuthErrorType, AuthResType } from '../types';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../services/AuthService';
 
 const SignUp = () => {
@@ -224,6 +224,10 @@ const SignUp = () => {
 
                 <ButtonSubmit isLoading={isLoading} />
             </form>
+
+            <div className='mt-3 text-center'>
+                Already have an account ? <Link to='/sign-in'>Sign in</Link>
+            </div>
         </div>
     );
 };

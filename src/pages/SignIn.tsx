@@ -6,7 +6,7 @@ import React, {
     useRef,
     useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ButtonSubmit from '../components/ButtonSubmit';
 import AuthService from '../services/AuthService';
 
@@ -187,6 +187,10 @@ const SignIn = () => {
 
                 <ButtonSubmit isLoading={isLoading} />
             </form>
+
+            <div className='mt-3 text-center'>
+                Don't have an account ? <Link to='/sign-up'>Sign up</Link>
+            </div>
         </div>
     );
 };
