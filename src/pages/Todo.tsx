@@ -4,7 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import SingleTodo from '../components/SingleTodo';
 
 import TodoService from '../services/TodoService';
-import { AddTodoResType, GetTodoResType, TodoType } from '../types';
+import {
+    AddTodoResType,
+    AuthErrorType,
+    GetTodoResType,
+    TodoType,
+} from '../types';
 
 type FilterByType = 'all' | 'doing' | 'completed';
 
@@ -31,6 +36,14 @@ const Todo = () => {
                 }
             } catch (error) {
                 console.log('fetch error: ' + error);
+
+                const res = error as AuthErrorType;
+
+                if (
+                    ['token', 'refreshToken'].includes(res.response.data.type)
+                ) {
+                    navigate('/sign-in');
+                }
             }
         }
 
@@ -236,6 +249,7 @@ const Todo = () => {
                             todos.length > 0 &&
                             todos.map((todo) => (
                                 <SingleTodo
+                                    key={todo._id}
                                     todo={todo}
                                     handleDeleteTodo={handleDeleteTodo}
                                     handleUpdateTodoState={

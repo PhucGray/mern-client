@@ -12,7 +12,6 @@ const App = () => {
 
     useEffect(() => {
         const isSignedIn = localStorage.getItem('token');
-
         if (isSignedIn) navigate('/');
     }, []);
 

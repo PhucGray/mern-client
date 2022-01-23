@@ -41,7 +41,7 @@ const SingleTodo = ({
                     type='checkbox'
                     role='button'
                     checked={isCompleted}
-                    onClick={() => handleUpdateTodoState(_id)}
+                    onChange={() => handleUpdateTodoState(_id)}
                 />
             </div>
 
